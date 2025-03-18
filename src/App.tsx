@@ -120,8 +120,8 @@ const CtrlCTrainer = () => {
         setMessage(`Good catch! This command was dangerous and didn't match the task. Reaction time: ${reactionTime.toFixed(3)}s (+${pointsEarned} points)`);
       } else {
         // Incorrect interruption - they interrupted a good command
-        const pointsLost = Math.min(score, level * 5);
-        setScore(prevScore => Math.max(0, prevScore - pointsLost));
+        const pointsLost = level * 5;
+        setScore(prevScore => prevScore - pointsLost); // Allow negative scores
         setMessage(`Oops! That command was correct for the task. You didn't need to interrupt it. (-${pointsLost} points)`);
       }
 
@@ -129,6 +129,7 @@ const CtrlCTrainer = () => {
       stopGame();
     }
   }, [gameActive, gamePhase, level, bestReaction, shouldInterrupt, score]);
+
 
   // Start displaying the task
   const beginChallenge = () => {
@@ -189,6 +190,7 @@ const CtrlCTrainer = () => {
           const randomError = errorMessages[Math.floor(Math.random() * errorMessages.length)];
           setMessage(randomError);
           setGameOver(true);
+          setScore(0); // Reset score when dangerous command runs
         } else {
           // Good command wasn't interrupted - this is correct
           const pointsEarned = level * 5;
